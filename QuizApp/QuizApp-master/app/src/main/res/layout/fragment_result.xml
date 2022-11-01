@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+        <variable
+            name="quizDetail"
+            type="com.heathkev.quizado.model.QuizListModel" />
+        <variable
+            name="viewModel"
+            type="com.heathkev.quizado.ui.result.ResultViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/results_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context=".ui.result.ResultFragment">
+
+            <View
+                android:id="@+id/status_bar"
+                style="@style/Widget.Quizado.AppBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/Widget.Quizado.AppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                app:navigationContentDescription="@string/navigate_up"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:title="@string/results" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:scrollbars="none">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/quiz_padding_bottom"
+                    app:goneUnless="@{!viewModel.isLoading}">
+
+                    <TextView
+                        android:id="@+id/results_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.result ? @string/congratulations : @string/try_again }"
+                        android:textColor="@{viewModel.result ? @color/colorCorrect : @color/colorWrong }"
+                        android:textSize="48sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="@string/congratulations"
+                        tools:textColor="@color/colorCorrect" />
+
+                    <ImageView
+                        android:id="@+id/result_image"
+                        android:layout_width="300dp"
+                        android:layout_height="300dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:contentDescription="@string/image_result"
+                        android:src="@{viewModel.result ? @drawable/ic_success : @drawable/ic_failed }"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/results_title"
+                        tools:src="@drawable/ic_success" />
+
+                    <TextView
+                        android:id="@+id/result_message_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:fontFamily="@font/merriweather"
+                        android:text="@{viewModel.result ? @string/congrats_message(quizDetail.name) : @string/failed_message(quizDetail.name)}"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorOnBackground"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/results_progress"
+                        tools:text="@string/congrats_message" />
+
+                    <TextView
+                        android:id="@+id/results_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorOnBackground"
+                        android:textSize="@dimen/text_size_h1"
+                        app:layout_constraintBottom_toBottomOf="@+id/results_progress"
+                        app:layout_constraintEnd_toEndOf="@+id/results_progress"
+                        app:layout_constraintStart_toStartOf="@+id/results_progress"
+                        app:layout_constraintTop_toTopOf="@+id/results_progress"
+                        tools:text="06/10" />
+
+                    <ProgressBar
+                        android:id="@+id/results_progress"
+                        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:progress="@{viewModel.scoreProgress}"
+                        android:progressDrawable="@drawable/circular_progess"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/result_image"
+                        tools:progress="100" />
+
+                    <Button
+                        android:id="@+id/results_share_btn"
+                        style="@style/Widget.Quizado.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="@dimen/margin_normal"
+                        android:layout_marginEnd="16dp"
+                        android:drawableEnd="@drawable/ic_share"
+                        android:text="@string/share"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/guideline"
+                        app:layout_constraintTop_toBottomOf="@+id/result_message_text" />
+
+                    <Button
+                        android:id="@+id/results_play_btn"
+                        style="@style/Widget.Quizado.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:drawableEnd="@drawable/ic_replay"
+                        android:text="@string/Retry"
+                        android:visibility="@{viewModel.result ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/result_message_text" />
+
+                    <Button
+                        android:id="@+id/results_home_btn"
+                        style="@style/Widget.Quizado.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="@dimen/margin_normal"
+                        android:layout_marginEnd="16dp"
+                        android:drawableEnd="@drawable/ic_home"
+                        android:text="@string/home"
+                        android:visibility="@{viewModel.result ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/result_message_text"
+                        tools:visibility="invisible" />
+
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.5" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/result_load_progress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:goneUnless="@{viewModel.isLoading}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="197dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
